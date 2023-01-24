@@ -21,19 +21,38 @@ class _MotivosState extends State<Motivos> {
     //Buscando as frases e fotos armazenadas
     final phrasesSnapshot = await firestore.collection("phrases").get();
     final photosSnapshot = await firestore.collection("photos").get();
+    final dadosPhotos = await firestore.collection("photos").doc("photosDoc").get();
+    final dadosPhrases = await firestore.collection("phrases").doc("phrasesDoc").get();
 
-    //Convertendo os dados buscados em listas
-    //final List phrases = phrasesSnapshot.docs.map((doc) => doc.data.["phrase"]).toList();
-    //final List photos = photosSnapshot.docs.map((doc) => doc.data["photo"]).toList();
+    int? quantidadePhotos = dadosPhotos.data()?.length;
+    int? quantidadePhrases = dadosPhrases.data()?.length;
+
+    String dadoUnitario = dadosPhrases.get("2").toString(); // recupera a frase de acordo com o ID string da frase
+
+
+    List<DocumentSnapshot> fotos = photosSnapshot.docs;
+    DocumentSnapshot documentSnapshot = fotos[0];
+
+    String? novo = dadosPhotos.data()?.length.toString();
+
+    String teste =  documentSnapshot.data().toString(); //tudo
+    String tamanho = teste.length.toString();
 
     //Gerando um número aleatório para escolher uma frase e foto
     final random = Random();
-   // final int randomIndex = random.nextInt(phrases.length);
+     int randomIndexPhrases = random.nextInt(quantidadePhrases!);
+     int randomIndexPhotos= random.nextInt(quantidadePhotos!);
+
+    String fraseSorteada = dadosPhrases.get(randomIndexPhrases.toString()).toString(); // recupera a frase de acordo com o ID string da frase
+    String fotoSorteada = dadosPhotos.get(randomIndexPhotos.toString()).toString(); // recupera a foto de acordo com o ID string da foto
 
     //Atualizando a tela com a frase e foto escolhidas
     setState(() {
-      //_selectedPhrase = phrases[randomIndex];
-    //  _selectedPhoto = photos[randomIndex];
+     _selectedPhrase = fraseSorteada;
+      _selectedPhoto = fotoSorteada;
+      print("fotos recuperadas: " + quantidadePhotos.toString()+ "-" + teste.toString() );
+      print("Frases recuperadas: " + quantidadePhrases.toString()+ "-" );
+      //print("teste unitario: " + fraseSorteada );
     });
   }
 
@@ -43,42 +62,45 @@ class _MotivosState extends State<Motivos> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Center(
-                child: Padding(
-                  padding: EdgeInsets.only(top: 64, bottom: 32),
-                  child: Text("Motivos: " +_selectedPhrase), //'subtituir por arte'
-                ),
-              ),
-              Center(
-                child: Image.network(_selectedPhoto),
-              ),
-              ElevatedButton(
-                child: Text(
-                  "Motivo do Dia",
-                  style: TextStyle(
-                      color: Colors.white, fontSize: 20
+        child: Center(
+          child: SingleChildScrollView(
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 64, bottom: 32),
+                      child: Text("Motivos: " +_selectedPhrase), //'subtituir por arte'
+                    ),
                   ),
-                ),
-                style: ElevatedButton.styleFrom(
-                    primary: Color(0xFFf99aaa),
-                    padding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(6)
-                    )
-                  //textStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)
-                ),
-                onPressed: (){},
-              ),
-            ]
-           ),
-      ),
-      )
+                  Center(
+                    child: Image.network(_selectedPhoto,fit: BoxFit.fill),
+                  ),
+                  ElevatedButton(
+                    child: Text(
+                      "Motivo do Dia",
+                      style: TextStyle(
+                          color: Colors.white, fontSize: 20
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                        primary: Color(0xFFf99aaa),
+                        padding: EdgeInsets.fromLTRB(32, 16, 32, 16),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6)
+                        )
+                      //textStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)
+                    ),
+                    onPressed: (){
+                      _generateRandomPhraseAndPhoto();
+
+                    },
+                  ),
+                ]
+            ),
+          ),
+        )
     );
   }
 }
