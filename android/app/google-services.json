@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "13107465713",
+    "firebase_url": "https://motivosprateamar-44453-default-rtdb.firebaseio.com",
+    "project_id": "motivosprateamar-44453",
+    "storage_bucket": "motivosprateamar-44453.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:13107465713:android:1d1fdb619bd35334850850",
+        "android_client_info": {
+          "package_name": "com.xXFalcoonXx.motivosprateamar"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "13107465713-i8980m16jde91b6eapa1shapcvu1q4uc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALqur0Mj0_CxSQLb6u14IkXv3focEdtsc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "13107465713-i8980m16jde91b6eapa1shapcvu1q4uc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
