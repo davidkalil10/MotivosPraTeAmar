@@ -8,6 +8,7 @@ import 'package:motivosprateamar/widgets/CustomCard.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 
 
 class Motivos extends StatefulWidget {
@@ -87,7 +88,7 @@ class _MotivosState extends State<Motivos> {
     return false;
   }
 
-   _copiarAreatransferencia () async{
+   _salvarGaleria () async{
     Uint8List imageBytesCaptured;
     screenshotController.capture().then((imageBytesCaptured) async{
       print(imageBytesCaptured);
@@ -101,7 +102,10 @@ class _MotivosState extends State<Motivos> {
        // final file = File("/storage/emulated/0/Download"+'/container_image.png');
          await file.writeAsBytes(imageBytesCaptured);
 
+        final path = await ImageGallerySaver.saveImage(imageBytesCaptured); //vai carai
+
         print("deveria ter salvo" + file.toString());
+        print("Image saved to gallery: $path");
 
         setState(() {
           _elaia = imageBytesCaptured;
@@ -128,8 +132,8 @@ class _MotivosState extends State<Motivos> {
                      imageURL: _selectedPhoto,
                      phrase: _selectedPhrase,
                      screenshotController: screenshotController,
-                     saveFunction: ()=> print("salvei"),
-                     copyFunction: _copiarAreatransferencia,
+                     saveFunction: _salvarGaleria,
+                     copyFunction: ()=> print("copiei"),
                      shareFunction: ()=> print("compartilhei"),
                  ),
                   Padding(
