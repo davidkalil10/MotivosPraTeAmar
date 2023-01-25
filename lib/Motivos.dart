@@ -1,8 +1,14 @@
+import 'dart:io';
 import 'dart:math';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/services.dart';
 import 'package:motivosprateamar/widgets/CustomCard.dart';
+import 'package:screenshot/screenshot.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+
 
 class Motivos extends StatefulWidget {
   const Motivos({Key? key}) : super(key: key);
@@ -16,6 +22,8 @@ class _MotivosState extends State<Motivos> {
   String _selectedPhrase = "Frase Inicial";
   String _selectedPhoto ="https://psico.online/blog/wp-content/uploads/2017/04/casal-na%CC%83o-deve-fazer-1.jpg.webp";
   bool _showcard = false;
+  ScreenshotController screenshotController = ScreenshotController();
+   Uint8List? _elaia = null;
 
   Future<void> _generateRandomPhraseAndPhoto() async {
 
@@ -67,6 +75,44 @@ class _MotivosState extends State<Motivos> {
     });
   }
 
+  Future<bool> _requestPermission(Permission permission) async {
+    if (await permission.isGranted) {
+      return true;
+    } else {
+      var result = await permission.request();
+      if (result == PermissionStatus.granted) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+   _copiarAreatransferencia () async{
+    Uint8List imageBytesCaptured;
+    screenshotController.capture().then((imageBytesCaptured) async{
+      print(imageBytesCaptured);
+      //Capture Done
+      if (imageBytesCaptured != null) {
+        await _requestPermission(Permission.storage);
+        final directory = await getApplicationDocumentsDirectory();
+        //final directory = await getExternalStorageDirectory();
+       // final imagePath = await File('${directory?.path}/container_image.png').create();
+        final file = File('${directory?.path}/container_image.png');
+       // final file = File("/storage/emulated/0/Download"+'/container_image.png');
+         await file.writeAsBytes(imageBytesCaptured);
+
+        print("deveria ter salvo" + file.toString());
+
+        setState(() {
+          _elaia = imageBytesCaptured;
+        });
+      }
+    }).catchError((onError) {
+      print(onError);
+    });
+
+  }
+
 
 
   @override
@@ -81,13 +127,15 @@ class _MotivosState extends State<Motivos> {
                  CustomCard(
                      imageURL: _selectedPhoto,
                      phrase: _selectedPhrase,
+                     screenshotController: screenshotController,
                      saveFunction: ()=> print("salvei"),
-                     copyFunction: ()=> print("copiei"),
+                     copyFunction: _copiarAreatransferencia,
                      shareFunction: ()=> print("compartilhei"),
                  ),
                   Padding(
                       padding: EdgeInsets.only(top: 20)
                   ),
+                //  if (_elaia!= null) Image.memory(_elaia!),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton(

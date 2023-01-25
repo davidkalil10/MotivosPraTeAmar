@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:screenshot/screenshot.dart';
+
 
 class CustomCard extends StatelessWidget {
 
@@ -7,6 +10,7 @@ class CustomCard extends StatelessWidget {
   final VoidCallback saveFunction;
   final VoidCallback copyFunction;
   final VoidCallback shareFunction;
+  final ScreenshotController screenshotController;
 
 
   CustomCard({
@@ -14,7 +18,9 @@ class CustomCard extends StatelessWidget {
       required this.phrase,
       required this.saveFunction,
       required this.copyFunction,
-      required this.shareFunction
+      required this.shareFunction,
+      required this.screenshotController
+
   });
 
   @override
@@ -25,21 +31,24 @@ class CustomCard extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.0)),
       child: Column(
         children: [
-          Stack(
-            alignment: Alignment.center,
-            children: [
-              Image.network(
-                imageURL,fit: BoxFit.fill,
-              ),
-              Text(
-                "\"" +phrase+ "\"",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontSize: 24
+          Screenshot(
+            controller: screenshotController,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Image.network(
+                  imageURL,fit: BoxFit.fill,
                 ),
-              )
-            ],
+                Text(
+                  "\"" +phrase+ "\"",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 24
+                  ),
+                )
+              ],
+            ),
           ),
           Container(
             // color: Colors.black,
@@ -55,9 +64,9 @@ class CustomCard extends StatelessWidget {
                   ),
                   IconButton(
                     icon: Icon(Icons.content_copy),
-                    onPressed: () {
-                      // Adicione a lógica para copiar aqui
+                    onPressed: ()  {
                       copyFunction();
+                      print("passei aqui");
                     },
                   ),
                   IconButton(
