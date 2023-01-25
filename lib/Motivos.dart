@@ -1,6 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:motivosprateamar/widgets/CustomCard.dart';
 
 class Motivos extends StatefulWidget {
   const Motivos({Key? key}) : super(key: key);
@@ -13,8 +15,16 @@ class _MotivosState extends State<Motivos> {
 
   String _selectedPhrase = "Frase Inicial";
   String _selectedPhoto ="https://psico.online/blog/wp-content/uploads/2017/04/casal-na%CC%83o-deve-fazer-1.jpg.webp";
+  bool _showcard = false;
 
   Future<void> _generateRandomPhraseAndPhoto() async {
+
+    //sumir com o card
+
+    setState(() {
+      _showcard = false;
+
+    });
     //Conectando ao Firestore
     final firestore = FirebaseFirestore.instance;
 
@@ -52,10 +62,10 @@ class _MotivosState extends State<Motivos> {
       _selectedPhoto = fotoSorteada;
       print("fotos recuperadas: " + quantidadePhotos.toString()+ "-" + teste.toString() );
       print("Frases recuperadas: " + quantidadePhrases.toString()+ "-" );
+      _showcard = true;
       //print("teste unitario: " + fraseSorteada );
     });
   }
-
 
 
 
@@ -68,34 +78,40 @@ class _MotivosState extends State<Motivos> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Center(
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 64, bottom: 32),
-                      child: Text("Motivos: " +_selectedPhrase), //'subtituir por arte'
-                    ),
+                 CustomCard(
+                     imageURL: _selectedPhoto,
+                     phrase: _selectedPhrase,
+                     saveFunction: ()=> print("salvei"),
+                     copyFunction: ()=> print("copiei"),
+                     shareFunction: ()=> print("compartilhei"),
+                 ),
+                  Padding(
+                      padding: EdgeInsets.only(top: 20)
                   ),
-                  Center(
-                    child: Image.network(_selectedPhoto,fit: BoxFit.fill),
-                  ),
-                  ElevatedButton(
-                    child: Text(
-                      "Motivo do Dia",
-                      style: TextStyle(
-                          color: Colors.white, fontSize: 20
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+                      child: Text(
+                        "Motivo do Dia",
+                        style: TextStyle(
+                            color: Colors.white, fontSize: 20
+                        ),
                       ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                        primary: Color(0xFFf99aaa),
-                        padding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(6)
-                        )
-                      //textStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)
-                    ),
-                    onPressed: (){
-                      _generateRandomPhraseAndPhoto();
+                      style: ElevatedButton.styleFrom(
+                        elevation: 24,
+                          primary: Color(0xFFf99aaa),
+                          padding: EdgeInsets.fromLTRB(32, 16, 32, 16),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(6)
+                          )
+                        //textStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)
+                      ),
+                      onPressed: (){
+                        _generateRandomPhraseAndPhoto();
+                        //_bypassImage();
 
-                    },
+                      },
+                    ),
                   ),
                 ]
             ),
