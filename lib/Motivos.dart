@@ -9,6 +9,7 @@ import 'package:screenshot/screenshot.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:share_plus/share_plus.dart';
 
 
 class Motivos extends StatefulWidget {
@@ -117,6 +118,39 @@ class _MotivosState extends State<Motivos> {
 
   }
 
+  _compartilhar () async{
+    Uint8List imageBytesCaptured;
+    screenshotController.capture().then((imageBytesCaptured) async{
+      print(imageBytesCaptured);
+      //Capture Done
+      if (imageBytesCaptured != null) {
+        await _requestPermission(Permission.storage);
+        final directory = await getTemporaryDirectory();
+        //final directory = await getExternalStorageDirectory();
+        // final imagePath = await File('${directory?.path}/container_image.png').create();
+        final file = File('${directory?.path}/image.png');
+        final path = '${directory?.path}/image.png';
+        // final file = File("/storage/emulated/0/Download"+'/container_image.png');
+        await file.writeAsBytes(imageBytesCaptured);
+        File(path).writeAsBytesSync(imageBytesCaptured);
+
+       // await Share.shareXFiles([XFile(path)], text: "Te amo pra sempre <3");
+      //  await Share.shareXFiles([XFile(path)], text: "Te amo pra sempre <3");
+       await Share.shareFiles([path], text: "Te amo pra sempre <3");
+
+        print("deveria ter salvo" + file.toString());
+        print("Image saved to gallery: $path");
+
+        setState(() {
+          _elaia = imageBytesCaptured;
+        });
+      }
+    }).catchError((onError) {
+      print(onError);
+    });
+
+  }
+
 
 
   @override
@@ -134,7 +168,7 @@ class _MotivosState extends State<Motivos> {
                      screenshotController: screenshotController,
                      saveFunction: _salvarGaleria,
                      copyFunction: ()=> print("copiei"),
-                     shareFunction: ()=> print("compartilhei"),
+                     shareFunction: _compartilhar,
                  ),
                   Padding(
                       padding: EdgeInsets.only(top: 20)
