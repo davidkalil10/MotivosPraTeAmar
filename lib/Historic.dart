@@ -1,4 +1,8 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Historic extends StatefulWidget {
   const Historic({Key? key}) : super(key: key);
@@ -7,25 +11,86 @@ class Historic extends StatefulWidget {
   State<Historic> createState() => _HistoricState();
 }
 
+
 class _HistoricState extends State<Historic> {
+
+  late StreamSubscription _streamSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Adiciona o listener ao banco de dados
+    _streamSubscription = FirebaseFirestore.instance
+        .collection("Photos_and_Phrases")
+        .snapshots()
+        .listen((event) {
+      // Reconstrói a tela sempre que houver mudanças no banco de dados
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    // Remove o listener do banco de dados ao sair da tela
+    _streamSubscription.cancel();
+
+    super.dispose();
+  }
+
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(top: 64, bottom: 32),
-                child: Container(
-                  child: Text("Historico"),
-                ), //'subtituir por arte'
-              )
-            ],
-          ),
-        ),
-      ),
+    return StreamBuilder(
+      stream: FirebaseFirestore.instance
+          .collection("Photos_and_Phrases")
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+
+        List<DocumentSnapshot> imagesAndTexts = snapshot.data!.docs;
+
+        return ListView.builder(
+          itemCount: imagesAndTexts.length,
+          itemBuilder: (context, index) {
+            DocumentSnapshot imageAndText = imagesAndTexts[index];
+
+            return Card(
+              child: Stack(
+                children: [
+                  Center(
+                    child: Image.network(
+                      imageAndText["photo"],
+                    ),
+                  ),
+                  Center(
+                    child: Text(
+                      imageAndText["phrase"],
+                      style: GoogleFonts.roboto(
+                        color: Colors.white.withOpacity(0.8),
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                        shadows: [
+                          Shadow(
+                            color: Colors.black,
+                            blurRadius: 2.0,
+                            offset: Offset(1.0, 1.0),
+                          ),
+                        ]
+                      ),
+                    ),
+
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }
