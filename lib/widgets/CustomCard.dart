@@ -8,7 +8,7 @@ class CustomCard extends StatelessWidget {
   final String imageURL;
   final String phrase;
   final VoidCallback saveFunction;
-  final VoidCallback copyFunction;
+  final VoidCallback downloadFunction;
   final VoidCallback shareFunction;
   final ScreenshotController screenshotController;
 
@@ -17,7 +17,7 @@ class CustomCard extends StatelessWidget {
       required this.imageURL,
       required this.phrase,
       required this.saveFunction,
-      required this.copyFunction,
+      required this.downloadFunction,
       required this.shareFunction,
       required this.screenshotController
 
@@ -63,9 +63,9 @@ class CustomCard extends StatelessWidget {
                     },
                   ),
                   IconButton(
-                    icon: Icon(Icons.content_copy),
+                    icon: Icon(Icons.download),
                     onPressed: ()  {
-                      copyFunction();
+                      downloadFunction();
                       print("passei aqui");
                     },
                   ),

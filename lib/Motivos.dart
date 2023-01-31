@@ -151,6 +151,58 @@ class _MotivosState extends State<Motivos> {
 
   }
 
+  Future<void> _salvarFirebase() async {
+    //Alimentando as variáveis
+
+    String image =  _selectedPhoto;
+    String text = _selectedPhrase ;
+
+    //Conectando ao Firestore
+    final firestore = FirebaseFirestore.instance;
+
+    //Adicionando a imagem e o texto ao Firestore
+    await firestore.collection("Photos_and_Phrases").add({
+      "photo": image,
+      "phrase": text,
+    }).whenComplete(() => print("Conjunto foto e frase salvos no firebase")).catchError((onError) {
+      print(onError);
+    });
+
+
+  }
+
+  _salvarFirebase2 () async{
+    Uint8List imageBytesCaptured;
+    screenshotController.capture().then((imageBytesCaptured) async{
+      print(imageBytesCaptured);
+      //Capture Done
+      if (imageBytesCaptured != null) {
+        await _requestPermission(Permission.storage);
+        final directory = await getTemporaryDirectory();
+        //final directory = await getExternalStorageDirectory();
+        // final imagePath = await File('${directory?.path}/container_image.png').create();
+        final file = File('${directory?.path}/image.png');
+        final path = '${directory?.path}/image.png';
+        // final file = File("/storage/emulated/0/Download"+'/container_image.png');
+        await file.writeAsBytes(imageBytesCaptured);
+        File(path).writeAsBytesSync(imageBytesCaptured);
+
+        // await Share.shareXFiles([XFile(path)], text: "Te amo pra sempre <3");
+        //  await Share.shareXFiles([XFile(path)], text: "Te amo pra sempre <3");
+
+        print("deveria ter salvo" + file.toString());
+        print("Image saved to gallery: $path");
+
+        setState(() {
+          _elaia = imageBytesCaptured;
+        });
+      }
+    }).catchError((onError) {
+      print(onError);
+    });
+
+  }
+
 
 
   @override
@@ -166,8 +218,8 @@ class _MotivosState extends State<Motivos> {
                      imageURL: _selectedPhoto,
                      phrase: _selectedPhrase,
                      screenshotController: screenshotController,
-                     saveFunction: _salvarGaleria,
-                     copyFunction: ()=> print("copiei"),
+                     saveFunction: _salvarFirebase,
+                     downloadFunction: _salvarGaleria,
                      shareFunction: _compartilhar,
                  ),
                   Padding(
