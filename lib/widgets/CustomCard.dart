@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:screenshot/screenshot.dart';
 
 
@@ -41,11 +42,12 @@ class CustomCard extends StatelessWidget {
                 ),
                 Text(
                   "\"" +phrase+ "\"",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      fontSize: 24
+                  style: GoogleFonts.gloriaHallelujah(
+                    color: Colors.white.withOpacity(0.8),
+                    fontSize: 35,
+                    fontWeight: FontWeight.bold,
                   ),
+                  textAlign: TextAlign.center,
                 )
               ],
             ),

@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:motivosprateamar/widgets/CustomCard.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:path_provider/path_provider.dart';
@@ -171,72 +172,44 @@ class _MotivosState extends State<Motivos> {
 
   }
 
-  _salvarFirebase2 () async{
-    Uint8List imageBytesCaptured;
-    screenshotController.capture().then((imageBytesCaptured) async{
-      print(imageBytesCaptured);
-      //Capture Done
-      if (imageBytesCaptured != null) {
-        await _requestPermission(Permission.storage);
-        final directory = await getTemporaryDirectory();
-        //final directory = await getExternalStorageDirectory();
-        // final imagePath = await File('${directory?.path}/container_image.png').create();
-        final file = File('${directory?.path}/image.png');
-        final path = '${directory?.path}/image.png';
-        // final file = File("/storage/emulated/0/Download"+'/container_image.png');
-        await file.writeAsBytes(imageBytesCaptured);
-        File(path).writeAsBytesSync(imageBytesCaptured);
-
-        // await Share.shareXFiles([XFile(path)], text: "Te amo pra sempre <3");
-        //  await Share.shareXFiles([XFile(path)], text: "Te amo pra sempre <3");
-
-        print("deveria ter salvo" + file.toString());
-        print("Image saved to gallery: $path");
-
-        setState(() {
-          _elaia = imageBytesCaptured;
-        });
-      }
-    }).catchError((onError) {
-      print(onError);
-    });
-
-  }
 
 
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return  _showcard
+         ?Container(
         child: Center(
           child: SingleChildScrollView(
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                 CustomCard(
-                     imageURL: _selectedPhoto,
-                     phrase: _selectedPhrase,
-                     screenshotController: screenshotController,
-                     saveFunction: _salvarFirebase,
-                     downloadFunction: _salvarGaleria,
-                     shareFunction: _compartilhar,
-                 ),
+                  CustomCard(
+                    imageURL: _selectedPhoto,
+                    phrase: _selectedPhrase,
+                    screenshotController: screenshotController,
+                    saveFunction: _salvarFirebase,
+                    downloadFunction: _salvarGaleria,
+                    shareFunction: _compartilhar,
+                  ),
                   Padding(
                       padding: EdgeInsets.only(top: 20)
                   ),
-                //  if (_elaia!= null) Image.memory(_elaia!),
+                  //  if (_elaia!= null) Image.memory(_elaia!),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton(
                       child: Text(
                         "Motivo do Dia",
-                        style: TextStyle(
-                            color: Colors.white, fontSize: 20
+                        style: GoogleFonts.gloriaHallelujah(
+                          color: Colors.white.withOpacity(0.8),
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
-                        elevation: 24,
+                          elevation: 24,
                           primary: Color(0xFFf99aaa),
                           padding: EdgeInsets.fromLTRB(32, 16, 32, 16),
                           shape: RoundedRectangleBorder(
@@ -255,6 +228,32 @@ class _MotivosState extends State<Motivos> {
             ),
           ),
         )
+    )
+         :Center(
+      child: ElevatedButton(
+        child: Text(
+          "Motivo do Dia",
+          style: GoogleFonts.gloriaHallelujah(
+            color: Colors.white.withOpacity(0.8),
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        style: ElevatedButton.styleFrom(
+            elevation: 24,
+            primary: Color(0xFFf99aaa),
+            padding: EdgeInsets.fromLTRB(32, 16, 32, 16),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(6)
+            )
+          //textStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)
+        ),
+        onPressed: (){
+          _generateRandomPhraseAndPhoto();
+          //_bypassImage();
+
+        },
+      ),
     );
   }
 }

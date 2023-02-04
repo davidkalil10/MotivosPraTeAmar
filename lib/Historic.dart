@@ -73,6 +73,7 @@ class _HistoricState extends State<Historic> {
               },
               child: Card(
                 child: Stack(
+                  alignment: Alignment.center,
                   children: [
                     Center(
                       child: Image.network(
@@ -82,18 +83,12 @@ class _HistoricState extends State<Historic> {
                     Center(
                       child: Text(
                         imageAndText["phrase"],
-                        style: GoogleFonts.roboto(
-                            color: Colors.white.withOpacity(0.8),
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold,
-                            shadows: [
-                              Shadow(
-                                color: Colors.black,
-                                blurRadius: 2.0,
-                                offset: Offset(1.0, 1.0),
-                              ),
-                            ]
+                        style: GoogleFonts.gloriaHallelujah(
+                          color: Colors.white.withOpacity(0.8),
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold,
                         ),
+                        textAlign: TextAlign.center,
                       ),
 
                     ),

@@ -52,7 +52,16 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         backgroundColor: Color(0xFFffcdd4),
         elevation: 0,
-        title: Text("Motivos pra te Amar!",style: TextStyle(color: Colors.black),),
+        title: Center(
+          child: Text("Motivos pra te Amar!",
+            style: GoogleFonts.gloriaHallelujah(
+              color: Colors.black.withOpacity(0.8),
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
       ),
       body: Container(
         child: _pages.elementAt(_page),
