@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:motivosprateamar/DetailScreen.dart';
 
 class Historic extends StatefulWidget {
   const Historic({Key? key}) : super(key: key);
@@ -59,33 +60,45 @@ class _HistoricState extends State<Historic> {
           itemBuilder: (context, index) {
             DocumentSnapshot imageAndText = imagesAndTexts[index];
 
-            return Card(
-              child: Stack(
-                children: [
-                  Center(
-                    child: Image.network(
-                      imageAndText["photo"],
-                    ),
-                  ),
-                  Center(
-                    child: Text(
-                      imageAndText["phrase"],
-                      style: GoogleFonts.roboto(
-                          color: Colors.white.withOpacity(0.8),
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                          shadows: [
-                            Shadow(
-                              color: Colors.black,
-                              blurRadius: 2.0,
-                              offset: Offset(1.0, 1.0),
-                            ),
-                          ]
+            return InkWell(
+              onTap: (){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DetailScreen(
+                      imageAndText: imagesAndTexts[index]
+                    )
+                  )
+                );
+              },
+              child: Card(
+                child: Stack(
+                  children: [
+                    Center(
+                      child: Image.network(
+                        imageAndText["photo"],
                       ),
                     ),
+                    Center(
+                      child: Text(
+                        imageAndText["phrase"],
+                        style: GoogleFonts.roboto(
+                            color: Colors.white.withOpacity(0.8),
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold,
+                            shadows: [
+                              Shadow(
+                                color: Colors.black,
+                                blurRadius: 2.0,
+                                offset: Offset(1.0, 1.0),
+                              ),
+                            ]
+                        ),
+                      ),
 
-                  ),
-                ],
+                    ),
+                  ],
+                ),
               ),
             );
           },

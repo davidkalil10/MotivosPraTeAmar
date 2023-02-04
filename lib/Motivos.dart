@@ -21,7 +21,7 @@ class Motivos extends StatefulWidget {
 
 class _MotivosState extends State<Motivos> {
 
-  String _selectedPhrase = "Frase Inicial";
+  String _selectedPhrase = "Para que nunca esqueça como eu te amo e te amarei por toda a eternidade";
   String _selectedPhoto ="https://psico.online/blog/wp-content/uploads/2017/04/casal-na%CC%83o-deve-fazer-1.jpg.webp";
   bool _showcard = false;
   ScreenshotController screenshotController = ScreenshotController();
