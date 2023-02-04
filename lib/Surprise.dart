@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart';
 
 class Surprise extends StatefulWidget {
   const Surprise({Key? key}) : super(key: key);
@@ -8,6 +10,53 @@ class Surprise extends StatefulWidget {
 }
 
 class _SurpriseState extends State<Surprise> {
+
+  late VideoPlayerController _controller;
+  String videoUrl = "";
+
+  Future<void> _getSurprise()async {
+
+    final firestore = FirebaseFirestore.instance;
+
+    //Buscando url do video
+    final urlSnapshot = await firestore.collection("surprise").doc("URL").get();
+
+    String url = urlSnapshot.get("URL").toString(); // recupera a URL do video
+
+    print("url recuperada: " + url);
+
+    setState(() {
+      videoUrl = url;
+    });
+
+    _controller = VideoPlayerController.network(videoUrl)
+      ..initialize().then((_) {
+        setState(() {});
+      });
+
+  }
+
+
+
+  @override
+  void initState() {
+    _getSurprise();
+
+     _controller = VideoPlayerController.network(videoUrl)
+      ..initialize().then((_) {
+        setState(() {
+          print("inicializado:" + _controller.value.isInitialized.toString());
+        });
+      });
+
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -16,12 +65,25 @@ class _SurpriseState extends State<Surprise> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Padding(
-                padding: EdgeInsets.only(top: 64, bottom: 32),
-                child: Container(
-                  child: Text("Surprise"),
-                ), //'subtituir por arte'
-              )
+              InkWell(
+                onTap: (){
+                  setState(() {
+                    _controller.value.isPlaying
+                        ? _controller.pause()
+                        : _controller.play();
+                  });
+                },
+                child: Center(
+                  child: _controller.value.isInitialized
+                      ? AspectRatio(
+                    aspectRatio: _controller.value.aspectRatio,
+                    child: VideoPlayer(_controller),
+                  )
+                      : Container(
+                    child: Text("Recuperando"),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
