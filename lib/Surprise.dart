@@ -75,10 +75,26 @@ class _SurpriseState extends State<Surprise> {
                 },
                 child: Center(
                   child: _controller.value.isInitialized
-                      ? AspectRatio(
+                      ? Column(
+                        children: [
+                          AspectRatio(
                     aspectRatio: _controller.value.aspectRatio,
                     child: VideoPlayer(_controller),
-                  )
+                  ),
+                          Slider(
+                            value: _controller.value.position.inSeconds.toDouble(),
+                            onChanged: (value) {
+                              setState(() {
+                                _controller
+                                  ..seekTo(Duration(seconds: value.toInt()));
+                              });
+                            },
+                            min: 0,
+                            max: _controller.value.duration.inSeconds.toDouble(),
+                          ),
+                          Text("${_controller.value.position.inSeconds} / ${_controller.value.duration.inSeconds}"),
+                        ],
+                      )
                       : Container(
                     child: Text("Recuperando"),
                   ),
