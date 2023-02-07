@@ -204,7 +204,21 @@ class _MotivosState extends State<Motivos> {
     await firestore.collection("Photos_and_Phrases").add({
       "photo": image,
       "phrase": text,
-    }).whenComplete(() => print("Conjunto foto e frase salvos no firebase")).catchError((onError) {
+    }).whenComplete(() {
+      print("Conjunto foto e frase salvos no firebase");
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(
+          content: Text(
+            "Salvo na nuvem com sucesso!",
+            style: GoogleFonts.gloriaHallelujah(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
+          )));
+
+    }).catchError((onError) {
       print(onError);
     });
 
