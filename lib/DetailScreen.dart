@@ -134,6 +134,17 @@ class _DetailScreenState extends State<DetailScreen> {
                     .doc(_imageAndText.id)
                     .delete();
                 Navigator.of(context).pop();
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(
+                    content: Text(
+                      "Deletado com sucesso!",
+                      style: GoogleFonts.gloriaHallelujah(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    )));
               },
             ),
           ],
