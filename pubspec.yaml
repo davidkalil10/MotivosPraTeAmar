@@ -48,6 +48,8 @@ dependencies:
   image_gallery_saver: ^1.7.1
   share_plus: ^5.0.0
   video_player: ^2.5.1
+  advanced_platform_detection: ^1.0.4
+  flutter_image_saver: ^1.0.1
 
 
   #firebase_auth: ^1.0.0

@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:motivosprateamar/widgets/ZoomCard.dart';
 import 'package:path_provider/path_provider.dart';
@@ -51,6 +52,18 @@ class _DetailScreenState extends State<DetailScreen> {
         print("deveria ter salvo" + file.toString());
         print("Image saved to gallery: $path");
 
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(
+            content: Text(
+              "Download para galeria sucesso!",
+              style: GoogleFonts.gloriaHallelujah(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            )));
+
         setState(() {
         });
       }
@@ -75,6 +88,18 @@ class _DetailScreenState extends State<DetailScreen> {
         File(path).writeAsBytesSync(imageBytesCaptured);
 
         await Share.shareFiles([path], text: "Te amo pra sempre <3");
+
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(
+            content: Text(
+              "Compartilhado com sucesso!",
+              style: GoogleFonts.gloriaHallelujah(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            )));
 
         setState(() {
         });

@@ -11,7 +11,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:share_plus/share_plus.dart';
-
+import 'package:url_launcher/url_launcher_string.dart';
+import 'package:advanced_platform_detection/advanced_platform_detection.dart';
+import 'package:flutter_image_saver/flutter_image_saver.dart';
 
 class Motivos extends StatefulWidget {
   const Motivos({Key? key}) : super(key: key);
@@ -91,31 +93,56 @@ class _MotivosState extends State<Motivos> {
   }
 
    _salvarGaleria () async{
-    Uint8List imageBytesCaptured;
-    screenshotController.capture().then((imageBytesCaptured) async{
-      print(imageBytesCaptured);
-      //Capture Done
-      if (imageBytesCaptured != null) {
-        await _requestPermission(Permission.storage);
-        final directory = await getApplicationDocumentsDirectory();
-        //final directory = await getExternalStorageDirectory();
-       // final imagePath = await File('${directory?.path}/container_image.png').create();
-        final file = File('${directory?.path}/container_image.png');
-       // final file = File("/storage/emulated/0/Download"+'/container_image.png');
-         await file.writeAsBytes(imageBytesCaptured);
 
-        final path = await ImageGallerySaver.saveImage(imageBytesCaptured); //vai carai
+      Uint8List imageBytesCaptured;
+      screenshotController.capture().then((imageBytesCaptured) async{
+        print(imageBytesCaptured);
+        //Capture Done
+        if (imageBytesCaptured != null) {
+          await _requestPermission(Permission.storage);
+          final directory = await getApplicationDocumentsDirectory();
+          //final directory = await getExternalStorageDirectory();
+          // final imagePath = await File('${directory?.path}/container_image.png').create();
+          final file = File('${directory?.path}/container_image.png');
+          // final file = File("/storage/emulated/0/Download"+'/container_image.png');
+          await file.writeAsBytes(imageBytesCaptured);
 
-        print("deveria ter salvo" + file.toString());
-        print("Image saved to gallery: $path");
+          final path = await ImageGallerySaver.saveImage(imageBytesCaptured); //vai carai
 
-        setState(() {
-          _elaia = imageBytesCaptured;
-        });
-      }
-    }).catchError((onError) {
-      print(onError);
-    });
+          print("deveria ter salvo" + file.toString());
+          print("Image saved to gallery: $path");
+
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(
+              content: Text(
+                "Download para galeria sucesso!",
+                style: GoogleFonts.gloriaHallelujah(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              )));
+
+          if(AdvancedPlatform.isWeb){
+
+            final path = await saveImage(imageBytesCaptured!.buffer.asUint8List(), 'flutter.png');
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text("Download com sucesso!")));
+
+          }
+
+
+          setState(() {
+            _elaia = imageBytesCaptured;
+          });
+        }
+      }).catchError((onError) {
+        print(onError);
+      });
+
+
+
 
   }
 
@@ -141,6 +168,18 @@ class _MotivosState extends State<Motivos> {
 
         print("deveria ter salvo" + file.toString());
         print("Image saved to gallery: $path");
+
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(
+            content: Text(
+              "Compartilhado com sucesso!",
+              style: GoogleFonts.gloriaHallelujah(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            )));
 
         setState(() {
           _elaia = imageBytesCaptured;

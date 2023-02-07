@@ -3,6 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  advanced_platform_detection
   permission_handler_windows
   share_plus_windows
   url_launcher_windows

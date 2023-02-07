@@ -3,6 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  advanced_platform_detection
   url_launcher_linux
 )
 

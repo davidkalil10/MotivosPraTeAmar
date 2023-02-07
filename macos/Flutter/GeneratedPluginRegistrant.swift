@@ -5,6 +5,7 @@
 import FlutterMacOS
 import Foundation
 
+import advanced_platform_detection
 import cloud_firestore
 import firebase_core
 import path_provider_foundation
@@ -12,6 +13,7 @@ import share_plus_macos
 import url_launcher_macos
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
+  AdvancedPlatformDetectionPlugin.register(with: registry.registrar(forPlugin: "AdvancedPlatformDetectionPlugin"))
   FLTFirebaseFirestorePlugin.register(with: registry.registrar(forPlugin: "FLTFirebaseFirestorePlugin"))
   FLTFirebaseCorePlugin.register(with: registry.registrar(forPlugin: "FLTFirebaseCorePlugin"))
   PathProviderPlugin.register(with: registry.registrar(forPlugin: "PathProviderPlugin"))
