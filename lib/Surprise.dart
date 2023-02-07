@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:video_player/video_player.dart';
 
 class Surprise extends StatefulWidget {
@@ -51,6 +52,10 @@ class _SurpriseState extends State<Surprise> {
 
   }
 
+  String formatTime(int seconds) {
+    return '${(Duration(seconds: seconds))}'.split('.')[0].padLeft(8, '0');
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -82,6 +87,7 @@ class _SurpriseState extends State<Surprise> {
                     child: VideoPlayer(_controller),
                   ),
                           Slider(
+                            activeColor: Colors.pinkAccent,
                             value: _controller.value.position.inSeconds.toDouble(),
                             onChanged: (value) {
                               setState(() {
@@ -92,11 +98,18 @@ class _SurpriseState extends State<Surprise> {
                             min: 0,
                             max: _controller.value.duration.inSeconds.toDouble(),
                           ),
-                          Text("${_controller.value.position.inSeconds} / ${_controller.value.duration.inSeconds}"),
+                          Text(
+                              "${formatTime(_controller.value.position.inSeconds)} / "+ formatTime(_controller.value.duration.inSeconds),
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold
+                            ),
+                          ),
                         ],
                       )
                       : Container(
-                    child: Text("Recuperando"),
+                    child: CircularProgressIndicator(),
                   ),
                 ),
               ),
