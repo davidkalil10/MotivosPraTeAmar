@@ -115,7 +115,7 @@ class _MotivosState extends State<Motivos> {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(
               content: Text(
-                "Download para galeria sucesso!",
+                "Download para galeria com sucesso!",
                 style: GoogleFonts.gloriaHallelujah(
                   color: Colors.white,
                   fontSize: 16,
@@ -206,21 +206,22 @@ class _MotivosState extends State<Motivos> {
       "phrase": text,
     }).whenComplete(() {
       print("Conjunto foto e frase salvos no firebase");
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(
-          content: Text(
-            "Salvo na nuvem com sucesso!",
-            style: GoogleFonts.gloriaHallelujah(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-            textAlign: TextAlign.center,
-          )));
 
     }).catchError((onError) {
       print(onError);
     });
+
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(
+        content: Text(
+          "Salvo na nuvem de favoritos com sucesso!",
+          style: GoogleFonts.gloriaHallelujah(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+          textAlign: TextAlign.center,
+        )));
 
 
   }

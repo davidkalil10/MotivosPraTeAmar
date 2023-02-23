@@ -55,7 +55,7 @@ class _DetailScreenState extends State<DetailScreen> {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(
             content: Text(
-              "Download para galeria sucesso!",
+              "Download para galeria com sucesso!",
               style: GoogleFonts.gloriaHallelujah(
                 color: Colors.white,
                 fontSize: 16,
